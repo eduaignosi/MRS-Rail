@@ -182,3 +182,7 @@ fig.update_layout({"title": "Total de Ocorrências Mensais por Falha no Rolament
                   xaxis_range=['2022-01-01', '2023-01-31'])
 fig.show()
 # %%
+
+# %%
+final_dff.index
+# %%
