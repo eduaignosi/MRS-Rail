@@ -42,6 +42,8 @@ def get_x_y(df):
 
 def plot_main_failures_per_vehicle_per_side_per_rodeiro(df_mult_index_sintax: pd.DataFrame, vehicle: str, side: str, rodeiro: str, range: str) -> None:
     # Plotting multiple trends in the same graph, main failures (monthly basis)
+    colors = ['rgb(37,255,81)', 'rgb(2555,2555,50)', 'rgb(255,146,50)',
+              'rgb(255,50,50)']  # green, yellow, orange, red
     fig = go.Figure()
     x1, y1 = get_x_y(df_mult_index_sintax['Falha de rolamento_.'])
     x2, y2 = get_x_y(df_mult_index_sintax['Falha de rolamento_RS3'])
@@ -49,17 +51,17 @@ def plot_main_failures_per_vehicle_per_side_per_rodeiro(df_mult_index_sintax: pd
     x4, y4 = get_x_y(df_mult_index_sintax['Falha de rolamento_RS1'])
     fig.add_trace(go.Scatter(x=x1, y=y1,
                              mode='lines+markers',
-                             name="Falha de rolamento '.' "))
+                             name="Falha de rolamento '.' ", line=dict(color=colors[0])))
     fig.add_trace(go.Scatter(x=x2, y=y2,
                              mode='lines+markers',
-                             name='Falha de rolamento RS3'))
+                             name='Falha de rolamento RS3', line=dict(color=colors[1])))
     fig.add_trace(go.Scatter(x=x3, y=y3,
-                             mode='lines+markers', name='Falha de rolamento RS2'))
+                             mode='lines+markers', name='Falha de rolamento RS2', line=dict(color=colors[2])))
     fig.add_trace(go.Scatter(x=x4, y=y4,
                              mode='lines+markers+text', name='Falha de rolamento RS1',
                              textposition='top left',
                              textfont=dict(color='#233a77'),
-                             text="RS1"))
+                             text="RS1", line=dict(color=colors[3])))
     vehi = 'xxx'
     fig.update_layout({"title": f"Total de Ocorrências {range} de Falhas Primárias no Rolamento no Veiculo {vehicle}, Lado {side}, Rodeiro {rodeiro}",
                        "xaxis": {"title": "Data"},
@@ -71,6 +73,8 @@ def plot_main_failures_per_vehicle_per_side_per_rodeiro(df_mult_index_sintax: pd
 
 def plot_secondary_failures_per_vehicle_per_side_per_rodeiro(df_mult_index_sintax: pd.DataFrame, vehicle: str, side: str, rodeiro: str, range: str) -> None:
     # Plotting multiple trends in the same graph,  secondary failures (monthly basis)
+    colors = ['rgb(37,255,81)', 'rgb(2555,2555,50)', 'rgb(255,146,50)',
+              'rgb(255,50,50)']  # green, yellow, orange, red
     fig = go.Figure()
     x1, y1 = get_x_y(df_mult_index_sintax['Falha de rolamento_FBS(RS3)'])
     x2, y2 = get_x_y(df_mult_index_sintax['Falha de rolamento_FBS(RS2)'])
@@ -78,17 +82,17 @@ def plot_secondary_failures_per_vehicle_per_side_per_rodeiro(df_mult_index_sinta
     x4, y4 = get_x_y(df_mult_index_sintax['Falha de rolamento_RS1'])
     fig.add_trace(go.Scatter(x=x1, y=y1,
                              mode='lines+markers',
-                             name="Falha de rolamento FBS(RS3) "))
+                             name="Falha de rolamento FBS(RS3)", line=dict(color=colors[0])))
     fig.add_trace(go.Scatter(x=x2, y=y2,
                              mode='lines+markers',
-                             name='Falha de rolamento FBS(RS2)'))
+                             name='Falha de rolamento FBS(RS2)', line=dict(color=colors[1])))
     fig.add_trace(go.Scatter(x=x3, y=y3,
-                             mode='lines+markers', name='Falha de rolamento FBS(4)'))
+                             mode='lines+markers', name='Falha de rolamento FBS(4)', line=dict(color=colors[2])))
     fig.add_trace(go.Scatter(x=x4, y=y4,
                              mode='lines+markers+text', name='Falha de rolamento RS1',
                              textposition='top left',
                              textfont=dict(color='#233a77'),
-                             text="RS1"))
+                             text="RS1", line=dict(color=colors[3])))
     fig.update_layout({"title": f"Total de Ocorrências {range} de Falhas Secundárias no Rolamento no Veiculo {vehicle}, Lado {side}, Rodeiro {rodeiro}",
                        "xaxis": {"title": "Data"},
                        "yaxis": {"title": "Total de ocorrências"},
@@ -118,27 +122,32 @@ final_dff = final_dff.swaplevel()
 # ----------------------------
 
 # %%
-plot_main_failures_per_vehicle_per_side_per_rodeiro(
-    final_dff.loc[:, 612934, 'L', 1], '612934', 'L', '1', 'Mensal')
-
-plot_secondary_failures_per_vehicle_per_side_per_rodeiro(
-    final_dff.loc[:, 612934, 'L', 1], '612934', 'L', '1', 'Mensal')
-
-plot_main_failures_per_vehicle_per_side_per_rodeiro(
-    final_dff.loc[:, 612934, 'L', 2], '612934', 'L', '2', 'Mensal')
-
-plot_secondary_failures_per_vehicle_per_side_per_rodeiro(
-    final_dff.loc[:, 612934, 'L', 2], '612934', 'L', '2', 'Mensal')
-
-plot_main_failures_per_vehicle_per_side_per_rodeiro(
-    final_dff.loc[:, 612934, 'L', 3], '612934', 'L', '3', 'Mensal')
-
-plot_secondary_failures_per_vehicle_per_side_per_rodeiro(
-    final_dff.loc[:, 612934, 'L', 3], '612934', 'L', '3', 'Mensal')
-
-plot_main_failures_per_vehicle_per_side_per_rodeiro(
-    final_dff.loc[:, 612934, 'L', 4], '612934', 'L', '4', 'Mensal')
-
-plot_secondary_failures_per_vehicle_per_side_per_rodeiro(
-    final_dff.loc[:, 612934, 'L', 4], '612934', 'L', '4', 'Mensal')
+# Plot multiple graphics for vehicle 612934, all rodeiros, all sides
+secondray_plot = True
+for i in range(1, 5):
+    plot_main_failures_per_vehicle_per_side_per_rodeiro(
+        final_dff.loc[:, 612934, 'L', i], '612934', 'L', str(i), 'Mensal')
+    plot_main_failures_per_vehicle_per_side_per_rodeiro(
+        final_dff.loc[:, 612934, 'R', i], '612934', 'R', str(i), 'Mensal')
+    if secondray_plot:
+        plot_secondary_failures_per_vehicle_per_side_per_rodeiro(
+            final_dff.loc[:, 612934, 'L', i], '612934', 'L', str(i), 'Mensal')
+        plot_secondary_failures_per_vehicle_per_side_per_rodeiro(
+            final_dff.loc[:, 612934, 'R', i], '612934', 'R', str(i), 'Mensal')
+# ---------------------------------------------------------------------
 # %%
+# Plot multiple graphics for vehicle 612934, all rodeiros, all sides
+secondray_plot = True
+for i in range(1, 5):
+    plot_main_failures_per_vehicle_per_side_per_rodeiro(
+        final_dff.loc[:, 734879, 'L', i], '734879', 'L', str(i), 'Mensal')
+    plot_main_failures_per_vehicle_per_side_per_rodeiro(
+        final_dff.loc[:, 734879, 'R', i], '734879', 'R', str(i), 'Mensal')
+    if secondray_plot:
+        plot_secondary_failures_per_vehicle_per_side_per_rodeiro(
+            final_dff.loc[:, 734879, 'L', i], '734879', 'L', str(i), 'Mensal')
+        plot_secondary_failures_per_vehicle_per_side_per_rodeiro(
+            final_dff.loc[:, 734879, 'R', i], '734879', 'R', str(i), 'Mensal')
+# %%
+# Insight, o rodeiro 4, tanto lado esquerdo e direito foi os que mais
+# apresentou falha secundaria... tem que ver se o numero de primaria tb...
